@@ -3,7 +3,7 @@ Here are the data to be feed to the roster for testing
 """
 
 staff = [
-    "grayson", "weston", "patrick", "mwaisaka", "lugano", "mkumba", "martin", "beldina", "felister", "nyandaro", "dorice", "magreth"
+    "grayson", "weston", "patrick", "mwaisaka", "lugano", "mkumba", "martin", "beldina", "felister", "nyandaro", "dorice", "magreth",
     "joshua", "jordan", "geofrey", "hansfrida", "Mariam"
     ]
 
