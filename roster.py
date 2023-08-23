@@ -55,7 +55,6 @@ class Roster():
     def night_shift(self):
         #Method that provide required night shift duty to staff
         required_en = (len(self.staff) * 1) // 5
-        print(required_en)
         trial = 1000
         weekly_night = []
         for index, row in self.roster_df.transpose().iterrows():
@@ -88,29 +87,51 @@ class Roster():
                     self.roster_df.loc[y, index] = "M"
                     morning_duties.append(y)
                     trial -= 1
-        print(self.roster_df)
         return self.roster_df
     
     def do_check(self):
         #Method that insure every staff has two days for resting each week
-        #do_indices = [self.roster_df[self.roster_df=="DO"].stack().index]
         
         for index, row in self.roster_df.iterrows():
             do_indices = list(row[row=="DO"].index)
             loop = 500
+            indices_len = len(do_indices)
             
-            while len(do_indices) < 2 and loop > 0:
+            while indices_len < 2 and loop > 0:
                 filled_spaces = list(row[row=="EN"].index.union(row[row=="SD"].index).union(row[row=="DO"].index.union(row[row=="M"].index)))
                 items = [item for item in self.weekdays if item not in filled_spaces]
                 if items:
                     x = np.random.choice(items)
                     self.roster_df.loc[index, x] = "DO"
                 loop -= 1
-        print(self.roster_df)
-        
+                indices_len += 1
+        return self.roster_df
+    
     def extra_duties(self):
         #Method that check for the incomplete requirements and provide extra duties to few workers
-        pass
+        for index, row in self.roster_df.transpose().iterrows():
+            required_en = (len(self.staff) * 1) // 5
+            filled_spaces = list(row[row=="EN"].index.union(row[row=="SD"].index).union(row[row=="DO"].index.union(row[row=="M"].index)))
+            en_staff = list(row[row=="EN"].index)
+            en_staff_length = len(en_staff)
+            
+            
+            while en_staff_length < required_en:
+                empty_spaces = [staff for staff in self.staff if staff not in filled_spaces]
+                y = np.random.choice(empty_spaces)
+                self.roster_df.loc[y, index] = "EN"
+                en_staff_length += 1
+        self.en_check()
+        return self.roster_df
+    
+    def filling_gaps(self):
+        #this method aims to fill all the remaining NaN with the morning shift as all the requirements was already fullfilled
+        for index, row in self.roster_df.iterrows():
+            filled_spaces = list(row[row=='EN'].index.union(row[row=='SD'].index).union(row[row=='DO'].index).union(row[row=='M'].index))
+            free_space = [item for item in self.weekdays if item not in filled_spaces]
+            for item in free_space:
+                self.roster_df.loc[index, item] = 'M'
+        print(self.roster_df)
 
 
 instance = Roster(staff, special_names)
@@ -118,3 +139,5 @@ instance.sd_check()
 instance.night_shift()
 instance.morning_shift()
 instance.do_check()
+instance.extra_duties()
+instance.filling_gaps()
