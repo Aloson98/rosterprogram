@@ -132,6 +132,7 @@ class Roster():
             for item in free_space:
                 self.roster_df.loc[index, item] = 'M'
         print(self.roster_df)
+        return self.roster_df
 
 
 instance = Roster(staff, special_names)
