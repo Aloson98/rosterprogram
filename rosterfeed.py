@@ -15,6 +15,3 @@ special_names = {
     "mkumba": "SD"
 }
 
-#automatically calculate the number of morning shift and night shift required on your roster
-req_m = (len(staff) * 4) // 15
-req_en = (len(staff) * 1) // 5
